@@ -6,7 +6,6 @@
     <script src="https://omnibrain.github.io/svguitar/js/svguitar.umd.js"></script>
 </head>
 <body>
-<div id="testChart" th:style="'width: 600px; height: 500px;'"></div>
 <div th:style="'display:flex; justify-content: space-around;'">
     <div id="BmChord" th:style="'width: 500px; height: 400px;'"></div>
     <div id="CmChord" th:style="'width: 500px; height: 400px;'"></div>
@@ -14,300 +13,99 @@
 </body>
 
 <script>
-    // 테스트 차트
-    var testChart = new svguitar.SVGuitarChord('#testChart')
+    // 함수 정의
+    function drawChord(selector, chordData, configData) {
+        var chord = new svguitar.SVGuitarChord(selector);
 
-    // 코드 다이어그램 설정
-    testChart
-        // 코드 설정
-        .chord({
-            // 손가락 코드
-            fingers: [
-                // 1번줄, 2플랫, 손가락번호-2
-                [1, 2, '2'],
+        chord
+            .chord(chordData)
+            .configure(configData)
+            .draw();
+    }
 
-                // 2번줄, 3플랫, 손가락번호-3(색:빨강)
-                [2, 3, {text: '3', color: '#F00', className: 'red'}],
+    // 공통 데이터
+    const commonConfig = {
+        orientation: 'horizontal',
+        style: 'normal',
+        strings: 6,
+        frets: 4,
+        fingerSize: 0.65,
+        fingerColor: '#000',
+        fingerStrokeColor: '#000000',
+        fingerStrokeWidth: 2,
+        barreChordStrokeColor: '#000000',
+        barreChordStrokeWidth: 2,
+        fretSize: 2,
+        fontFamily: 'Open Sans, Arial, sans-serif',
+        titleFontSize: 40,
+        titleBottomMargin: 10,
+        color: '#000000',
+        backgroundColor: 'none',
+        barreChordRadius: 0.5,
+        emptyStringIndicatorSize: 0.5,
+        strokeWidth: 2,
+        nutWidth: 10,
+        fixedDiagramPosition: false,
+        fretLabelColor: '#000000',
+        fretColor: '#000000',
+    };
 
-                // 3번줄, 3플랫, 손가락코드모양-세모
-                [3, 3, {shape: 'triangle'}],
+    // Bm 데이터
+    const bmChordData = {
+        fingers: [
+            [2, 3],
+            [3, 4],
+            [4, 4],
+            [6, 'x'],
+        ],
+        barres: [
+            {
+                fromString: 5,
+                toString: 1,
+                fret: 2,
+                color: '#000000',
+                className: 'Bm',
+            },
+        ],
+        title: 'Bm',
+        position: 1,
+    };
 
-                // 6번줄, 뮤트
-                [6, 'x'],
-            ],
+    // Cm 데이터
+    const cmChordData = {
+        fingers: [
+            [2, 3],
+            [3, 4],
+            [4, 4],
+            [6, 'x'],
+        ],
+        barres: [
+            {
+                fromString: 5,
+                toString: 1,
+                fret: 2,
+                color: '#000000',
+                className: 'Cm',
+            },
+        ],
+        title: 'Cm',
+        position: 2,
+    };
 
-            // 바레
-            barres: [
-                {
-                    fromString: 5, // 5번줄부터
-                    toString: 1, // 1번줄까지
-                    fret: 1, // 1플랫
-                    text: '1', // 손가락번호1
-                    color: '#0F0', // 바 색
-                    textColor: '#F00', // 손가락번호 색
-                    className: 'my-barre-chord',
-                },
-            ],
+    // 정의된 함수에 Bm 데이터 넣어서 다이어그램 생성
+    drawChord('#BmChord', bmChordData, {
+        ...commonConfig,
+        noPosition: false,
+        svgTitle: '커스텀 기타코드 Bm',
+    });
 
-            // 코드명
-            title: 'F# minor',
-
-            // 표 시작 플랫 (이게 없으면 .configure - position이 적용된다.)
-            position: 3,
-        })
-
-        // 환경설정(모든 설정 커스텀)
-        .configure({
-            // Customizations (all optional, defaults shown)
-
-            // 차트 방향
-            orientation: 'horizontal',
-
-            // 디자인 (normal / handdrawn)
-            style: 'normal',
-
-            // 줄 개수
-            strings: 6,
-
-            // 플랫 개수
-            frets: 4,
-
-            // 표 시작 기본 플랫 (.chord - position이 지정 안되어 있으면 이게 적용된다.)
-            position: 1,
-
-            // 튜닝 코드
-            tuning: ['E', 'A', 'D', 'G', 'B', 'E'],
-
-            // 플랫 라벨 위치 (vertical 기준)
-            fretLabelPosition: 'left',
-
-            // 플랫 라벨 크기
-            fretLabelFontSize: 25,
-
-            // 튜닝 라벨 크기
-            tuningsFontSize: 20,
-
-            // 손가락 코드 크기
-            fingerSize: 0.65,
-
-            // 손가락 코드 색
-            fingerColor: '#000',
-
-            // 손가락 번호 색
-            fingerTextColor: '#FFF',
-
-            // 손가락 번호 크기
-            fingerTextSize: 20,
-
-            // 손가락 모양 테두리 색(stroke)
-            fingerStrokeColor: '#000000',
-
-            // 손가락 모양 테두리 두께(stroke)
-            fingerStrokeWidth: 2,
-
-            // 바레코드 손가락 모양 테두리 색(stroke)
-            barreChordStrokeColor: '#0f4ce5',
-
-            /// 바레코드 손가락 모양 테두리 두께(stroke)
-            barreChordStrokeWidth: 2,
-
-            // horizontal 기준 플랫 가로 간격
-            fretSize: 3,
-
-            /*
-                기타와 SVG의 가장자리 사이의 최소 측면 패딩 (전체 너비에 대한 비율).
-                이 값은 패딩 내부에 있는 문자들(예: 시작 프렛)보다 클 경우에만 적용됩니다.
-                (간격에 따라 다이어그램 배치가 달라지므로 되도록 변경하지 말고 사용하기)
-             */
-            sidePadding: 0.2,
-
-            // 코드명, 튜닝라벨 폰트
-            // fontFamily: 'Open Sans, Arial, sans-serif',
-            fontFamily: 'Times New Roman, Times, serif',
-
-            // 코드명(.chord - title이 없으면 이게 적용된다.)
-            title: 'F# minor',
-
-            // 코드명 크기
-            titleFontSize: 30,
-
-            // 코드명 bottom margin (vertical-bottom margin, horizontal-right margin)
-            titleBottomMargin: 20,
-
-            /*
-                전체 차트의 글로벌 색상입니다.
-                @link titleColor 또는 @link stringColor 등과 같은 더 구체적인 색상 설정으로 재정의할 수 있습니다.
-                titleColor랑, stringColor가 세트로 변경됨
-                (코드명, 뮤트표시 색)
-             */
-            color: '#e5880f',
-
-            // 코드 다이어그램 전체 배경 색 (기본 none : 투명)
-            backgroundColor: 'none',
-            // backgroundColor: '#e5880f',
-
-            // 바레 rounded
-            barreChordRadius: 0.5,
-
-            // 뮤트 표시 (X, O) 의 크기를 두 줄 사이의 간격에 상대적으로 설정
-            emptyStringIndicatorSize: 0.5,
-
-            // 표 전체 border 두께
-            strokeWidth: 2,
-
-            // 표 시작 라인(nut) 두께 (position이 1일때만 적용된다.)
-            nutWidth: 10,
-
-            /*
-             * true면 2플랫이상 일 경우 - 플랫 라벨 (ex. 2fr), 1플랫일 경우 -  표 시작표시(nut)가 사라진다.
-             * false면 보인다.
-             */
-            noPosition: false,
-
-            // 덮어쓰기용도, 잘 안씀
-            titleColor: '#000000',
-
-            // 덮어쓰기용도, 잘 안씀
-            stringColor: '#000000',
-
-            // 플랫 라벨 색
-            fretLabelColor: '#85e50f',
-
-            // 튜닝 라벨 색
-            tuningsColor: '#650fe5',
-
-            // 표 전체 border 색
-            fretColor: '#d30505',
-
-            /*
-                true로 설정하면 제목이 정의되었는지 여부와 관계없이 코드 다이어그램과 SVG의 상단 사이의 거리가 동일하게 유지됩니다.
-             */
-            fixedDiagramPosition: false,
-
-            // 워터마크 라벨 내용
-            watermark: '워터마크 라벨',
-
-            // 워터마크 라벨 크기
-            watermarkFontSize: 12,
-
-            // 워터마크 라벨 색
-            watermarkColor: '#6f22f3',
-
-            // 워터마크 라벨 폰트
-            watermarkFontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-
-            // 코드 다이어그램을 svg로 제공해주는거고, 이 코드 다이어그램 svg에 호버했을 때 나오는 이름
-            svgTitle: ' 기타 코드 테스트 svg'
-        })
-        .draw()
-
-
-    // Bm Chord
-    var BmChord = new svguitar.SVGuitarChord('#BmChord')
-
-    BmChord
-        .chord({
-            fingers: [
-                [2, 3],
-                [3, 4],
-                [4, 4],
-                [6, 'x'],
-            ],
-            barres: [
-                {
-                    fromString: 5,
-                    toString: 1,
-                    fret: 2,
-                    color: '#000000',
-                    className: 'Bm',
-                },
-            ],
-            title: 'Bm',
-            position: 1,
-        })
-        .configure({
-            orientation: 'horizontal',
-            style: 'normal',
-            strings: 6,
-            frets: 4,
-            fingerSize: 0.65,
-            fingerColor: '#000',
-            fingerStrokeColor: '#000000',
-            fingerStrokeWidth: 2,
-            barreChordStrokeColor: '#000000',
-            barreChordStrokeWidth: 2,
-            fretSize: 2,
-            fontFamily: 'Open Sans, Arial, sans-serif',
-            titleFontSize: 40,
-            titleBottomMargin: 10,
-            color: '#000000',
-            backgroundColor: 'none',
-            barreChordRadius: 0.5,
-            emptyStringIndicatorSize: 0.5,
-            strokeWidth: 2,
-            nutWidth: 10,
-            noPosition: false,
-            fretLabelColor: '#000000',
-            fretColor: '#000000',
-            fixedDiagramPosition: false,
-            svgTitle: '커스텀 기타코드 Bm'
-        })
-        .draw()
-
-
-    // Cm Chord
-    var CmChord = new svguitar.SVGuitarChord('#CmChord')
-
-    CmChord
-        .chord({
-            fingers: [
-                [2, 3],
-                [3, 4],
-                [4, 4],
-                [6, 'x'],
-            ],
-            barres: [
-                {
-                    fromString: 5,
-                    toString: 1,
-                    fret: 2,
-                    color: '#000000',
-                    className: 'Cm',
-                },
-            ],
-            title: 'Cm',
-            position: 2,
-        })
-        .configure({
-            orientation: 'horizontal',
-            style: 'normal',
-            strings: 6,
-            frets: 4,
-            fingerSize: 0.65,
-            fingerColor: '#000',
-            fingerStrokeColor: '#000000',
-            fingerStrokeWidth: 2,
-            barreChordStrokeColor: '#000000',
-            barreChordStrokeWidth: 2,
-            fretSize: 2,
-            fretLabelFontSize: 24,
-            fretLabelPosition: 'left',
-            fontFamily: 'Open Sans, Arial, sans-serif',
-            titleFontSize: 40,
-            titleBottomMargin: 10,
-            color: '#000000',
-            backgroundColor: 'none',
-            barreChordRadius: 0.5,
-            emptyStringIndicatorSize: 0.5,
-            strokeWidth: 2,
-            nutWidth: 10,
-            noPosition: true,
-            // watermark: "3" + '\u00A0'.repeat(30), // 10이 반칸 씩
-            watermark: "3" + '\u00A0'.repeat(10),
-            watermarkFontSize: 35,
-            fixedDiagramPosition: false,
-            svgTitle: '커스텀 기타코드 Cm',
-        })
-        .draw()
+    // 정의된 함수에 Cm 데이터 넣어서 다이어그램 생성
+    drawChord('#CmChord', cmChordData, {
+        ...commonConfig,
+        noPosition: true,
+        watermark: "3" + '\u00A0'.repeat(10),
+        watermarkFontSize: 35,
+        svgTitle: '커스텀 기타코드 Cm',
+    });
 </script>
 </html>
